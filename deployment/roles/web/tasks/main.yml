@@ -1,0 +1,40 @@
+- name: install php with required extensions and nginx
+  apt: pkg={{ item }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - php
+    - php-common
+    - php-mbstring
+    - php-xml
+    - php-zip
+    - nginx
+    - git
+  become: True
+
+- name: remove apache2 installation from ubuntu 18.04
+  apt: pkg=apache2 state=absent purge=yes
+  become: True
+
+- name: copy nginx config file
+  copy: src=nginx.conf dest=/etc/nginx/sites-available/default
+  become: True
+
+- name: enable nginx configuration
+  file: >
+    dest=/etc/nginx/sites-enabled/default
+    src=/etc/nginx/sites-available/default
+    state=link
+  notify: restart nginx
+
+- name: create project directory
+  file: path={{ remote_source_path }} state=directory
+  tags:
+    - project_directory
+  
+
+- name: checkout latest code from github
+  git: >
+    repo=git@github.com:raheelkhan/laravel-ansible.git 
+    dest={{ remote_source_path }}
+    accept_hostkey=yes
+  tags:
+    - checkout
