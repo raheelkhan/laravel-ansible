@@ -27,14 +27,9 @@
 
 - name: create project directory
   file: path={{ remote_source_path }} state=directory
-  tags:
-    - project_directory
-  
 
 - name: checkout latest code from github
   git: >
     repo=git@github.com:raheelkhan/laravel-ansible.git 
     dest={{ remote_source_path }}
     accept_hostkey=yes
-  tags:
-    - checkout
