@@ -3,11 +3,13 @@
   with_items:
     - php
     - php-common
+    - php-fpm
     - php-mbstring
     - php-xml
     - php-zip
     - nginx
     - git
+    - composer
   become: True
 
 - name: remove apache2 installation from ubuntu 18.04
@@ -32,4 +34,20 @@
   git: >
     repo=git@github.com:raheelkhan/laravel-ansible.git 
     dest={{ remote_source_path }}
+    force=yes
     accept_hostkey=yes
+
+- name: install laravel dependencies via composer
+  composer: command=install working_dir={{ remote_source_path }}
+
+- name: give writeable permissions to laravel storage directory
+  file: >
+    path={{ remote_storage_path }}
+    mode=0764
+    owner=ubuntu
+    group=www-data
+    state=directory
+    recurse=yes
+  become: True
+  tags:
+    - permissions

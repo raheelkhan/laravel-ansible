@@ -1,1 +1,2 @@
-remote_source_path: ~/laravel-ansible
+remote_source_path: /home/ubuntu/laravel-ansible
+remote_storage_path: "{{ remote_source_path }}/storage"
