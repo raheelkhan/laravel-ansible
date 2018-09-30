@@ -40,10 +40,16 @@
 - name: install laravel dependencies via composer
   composer: command=install working_dir={{ remote_source_path }}
 
+- name: copy .env.production to .env
+  copy: >
+    src="{{ remote_source_path}}/.env.production" 
+    dest="{{ remote_source_path}}/.env"
+    remote_src=yes
+
 - name: give writeable permissions to laravel storage directory
   file: >
     path={{ remote_storage_path }}
-    mode=0764
+    mode=0775
     owner=ubuntu
     group=www-data
     state=directory
