@@ -1,5 +1,17 @@
 - name: web plays
   hosts: web
-  gather_facts: False
+  gather_facts: True
   roles:
     - web
+
+- name: database plays
+  hosts: database
+  gather_facts: False
+  roles:
+    - database
+
+- name: cache plays
+  hosts: cache
+  gather_facts: True
+  roles:
+    - cache
